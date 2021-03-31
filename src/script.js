@@ -22,23 +22,45 @@ const scene = new THREE.Scene()
  * Textures
  */
 const textureLoader = new THREE.TextureLoader()
+const flagTexture = textureLoader.load(require('../static/textures/60644304d529f.jpg').default)
 
 /**
  * Test mesh
  */
 // Geometry
 const geometry = new THREE.PlaneBufferGeometry(1, 1, 32, 32)
+const count = geometry.attributes.position.count
+const randoms = new Float32Array(count)
 
+for (let i = 0; i < count; i++) {
+    randoms[i] = Math.random()
+}
+
+geometry.setAttribute('aRandom', new THREE.BufferAttribute(randoms, 1))
+console.log(geometry.attributes)
 // Material
-const material = new THREE.RawShaderMaterial({
+
+// RawShaderMaterial
+// ShaderMaterial - уже есть свои uniform, attributes, precision
+const material = new THREE.ShaderMaterial({
     vertexShader: testVertexShader,
     fragmentShader: testFragmentShader,
-    wireframe: true,
-    side: THREE.DoubleSide // две стороны
+    // wireframe: true,
+    side: THREE.DoubleSide, // две стороны
+    uniforms: {
+        uFrequency: { value: new THREE.Vector2(10, 5) },
+        uTime: { value: 0 },
+        uColor: { value: new THREE.Color('orange') },
+        uTexture: { value: flagTexture }
+    }
 })
+
+gui.add(material.uniforms.uFrequency.value, 'x', 0, 20, 0.01).name('frequency-X')
+gui.add(material.uniforms.uFrequency.value, 'y', 0, 20, 0.01).name('frequency-Y')
 
 // Mesh
 const mesh = new THREE.Mesh(geometry, material)
+mesh.scale.y = 2 / 3
 scene.add(mesh)
 
 /**
@@ -80,7 +102,8 @@ controls.enableDamping = true
  * Renderer
  */
 const renderer = new THREE.WebGLRenderer({
-    canvas: canvas
+    canvas: canvas,
+    antialias: true
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
@@ -93,6 +116,9 @@ const clock = new THREE.Clock()
 const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
+
+    // Update uniforms
+    material.uniforms.uTime.value = elapsedTime
 
     // Update controls
     controls.update()
