@@ -4,7 +4,7 @@ const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
 
 module.exports = {
-    entry: path.resolve(__dirname, '../src/script.js'),
+    entry: path.resolve(__dirname, '../src/script28(Modified Material).js'),
     output:
     {
         filename: 'bundle.[contenthash].js',
@@ -90,7 +90,20 @@ module.exports = {
                     'raw-loader',
                     // 'glslify-loader'
                 ]
-            }
+            },
+            {
+                test: /\.(glb|gltf)$/,
+                use:
+                    [
+                        {
+                            loader: 'file-loader',
+                            options:
+                                {
+                                    outputPath: 'assets/models/'
+                                }
+                        }
+                    ]
+            },
         ]
     }
 }
