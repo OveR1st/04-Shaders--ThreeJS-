@@ -83,12 +83,23 @@ module.exports = {
                     }
                 ]
             },
+            // {
+            //     test: /\.glsl$/,
+            //     loader: 'webpack-glsl'
+            // },
             {
-                test: /\.(glsl|vs|fs|vert|frag)$/,
+                test: /\.(glsl|frag|vert)$/,
                 exclude: /node_modules/,
                 use: [
                     'raw-loader',
-                    // 'glslify-loader'
+                    {
+                        loader: 'glslify-loader',
+                        options: {
+                            transform: [
+                                ['glslify-hex', { 'option-1': true, 'option-2': 42 }]
+                            ]
+                        }
+                    }
                 ]
             },
             {
@@ -103,7 +114,7 @@ module.exports = {
                                 }
                         }
                     ]
-            },
+            }
         ]
     }
 }
