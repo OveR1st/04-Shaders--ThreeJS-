@@ -2,7 +2,7 @@
   "scripts": {
     "build": "webpack --config ./bundler/webpack.prod.js",
     "dev": "webpack serve --config ./bundler/webpack.dev.js",
-    "deploy": "npm run build && gh-pages -d dist"
+    "deploy": "npm run build && gh-pages -d dist -b wavesPages"
   },
   "homepage": "https://over1st.github.io/04-Shaders--ThreeJS-",
   "dependencies": {
